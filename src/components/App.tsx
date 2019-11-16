@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Todo, fetchTodos } from '../actions';
 import { StoreState } from '../reducers';
@@ -8,11 +8,32 @@ interface AppProps {
   fetchTodos(): any;
 }
 
-class _App extends React.Component<AppProps> {
-  render() {
-    return <div>Hi!</div>;
-  }
-}
+const _App = ({ todos, fetchTodos }: AppProps): JSX.Element => {
+  // useEffect(() => {
+  //   let ignore = false;
+  //   if (!ignore) fetchTodos();
+
+  //   return () => {
+  //     ignore = true;
+  //   };
+  // }, [fetchTodos]);
+
+  const onButtonClick = (): void => {
+    fetchTodos();
+  };
+
+  const renderList: JSX.Element[] = todos.map((item: Todo) => (
+    <li key={item.id}>{item.title}</li>
+  ));
+
+  return (
+    <>
+      <button onClick={onButtonClick}>Fetch todos</button>
+      <ul>{renderList}</ul>
+    </>
+  );
+};
+
 const mapStateToProps = ({ todos }: StoreState): { todos: Todo[] } => {
   return { todos };
 };
