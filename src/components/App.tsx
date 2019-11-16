@@ -9,15 +9,6 @@ interface AppProps {
 }
 
 const _App = ({ todos, fetchTodos }: AppProps): JSX.Element => {
-  // useEffect(() => {
-  //   let ignore = false;
-  //   if (!ignore) fetchTodos();
-
-  //   return () => {
-  //     ignore = true;
-  //   };
-  // }, [fetchTodos]);
-
   const onButtonClick = (): void => {
     fetchTodos();
   };
