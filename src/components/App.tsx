@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Todo, fetchTodos, deleteTodo } from '../actions';
 import { StoreState } from '../reducers';
@@ -9,9 +9,31 @@ interface AppProps {
   deleteTodo: typeof deleteTodo;
 }
 
-const _App = (props: AppProps): JSX.Element => {
-  const { todos, fetchTodos, deleteTodo } = props;
+const _App: React.FC<AppProps> = ({
+  todos,
+  fetchTodos,
+  deleteTodo,
+}): JSX.Element => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const usePrevious = (value: any) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  };
+
+  const prevTodos = usePrevious(todos);
+
+  useEffect(() => {
+    if (prevTodos !== todos) {
+      setIsLoading(false);
+    }
+  }, [todos, prevTodos]);
+
   const onButtonClick = (): void => {
+    setIsLoading(true);
     fetchTodos();
   };
 
@@ -21,14 +43,14 @@ const _App = (props: AppProps): JSX.Element => {
 
   const renderList: JSX.Element[] = todos.map((item: Todo) => (
     <li key={item.id}>
-      {item.title}{' '}
+      <p>{item.title}</p>
       <button onClick={() => onDeleteClick(item.id)}>Delete</button>
     </li>
   ));
-
   return (
     <>
       <button onClick={onButtonClick}>Fetch todos</button>
+      <p>{isLoading && 'LOADING...'}</p>
       <ul>{renderList}</ul>
     </>
   );
