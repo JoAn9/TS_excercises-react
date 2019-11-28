@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Todo, fetchTodos, deleteTodo } from '../actions';
 import { StoreState } from '../reducers';
@@ -16,21 +16,9 @@ const _App: React.FC<AppProps> = ({
 }): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const usePrevious = (value: any) => {
-    const ref = useRef();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  };
-
-  const prevTodos = usePrevious(todos);
-
   useEffect(() => {
-    if (prevTodos !== todos) {
-      setIsLoading(false);
-    }
-  }, [todos, prevTodos]);
+    setIsLoading(false);
+  }, [todos]);
 
   const onButtonClick = (): void => {
     setIsLoading(true);
